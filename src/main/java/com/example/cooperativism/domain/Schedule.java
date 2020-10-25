@@ -1,18 +1,33 @@
-package Coop.domain;
+package com.example.cooperativism.domain;
 
+import javax.persistence.*;
 import java.sql.Time;
 import java.util.Objects;
 
+@Entity
 public class Schedule {
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Voting voting;
-    private Time time;
+    //@Timed
+    //private Time time;
     private String topic;
-    private String id;
+
 
     public Schedule() {
     }
 
-    public Schedule(String topic, String id) {
+    public Schedule(String topic) {
+        this.topic = topic;
+    }
+
+    public Schedule(String topic, int id) {
         this.topic = topic;
         this.id = id;
     }
@@ -25,14 +40,6 @@ public class Schedule {
         this.voting = voting;
     }
 
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
-    }
-
     public String getTopic() {
         return topic;
     }
@@ -41,11 +48,11 @@ public class Schedule {
         this.topic = topic;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -55,13 +62,12 @@ public class Schedule {
         if (!(o instanceof Schedule)) return false;
         Schedule schedule = (Schedule) o;
         return Objects.equals(voting, schedule.voting) &&
-                Objects.equals(time, schedule.time) &&
                 Objects.equals(topic, schedule.topic) &&
                 Objects.equals(id, schedule.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(voting, time, topic, id);
+        return Objects.hash(voting, topic, id);
     }
 }
