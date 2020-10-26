@@ -85,4 +85,6 @@ public class Voting {
     public int hashCode() {
         return Objects.hash(id, votes, timeMinutes, counterYes, counterNo);
     }
+
+
 }

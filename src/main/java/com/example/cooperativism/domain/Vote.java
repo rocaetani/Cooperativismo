@@ -11,7 +11,8 @@ public class Vote {
     private boolean choice;
     private int idAssociate;
 
-    public Vote() {
+    public Vote(){
+
     }
 
     public Vote(boolean choice, int idAssociate) {
