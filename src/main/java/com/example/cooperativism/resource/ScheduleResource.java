@@ -2,6 +2,7 @@ package com.example.cooperativism.resource;
 
 import com.example.cooperativism.domain.Schedule;
 import com.example.cooperativism.exception.ResponseException;
+import com.example.cooperativism.service.AssociateService;
 import com.example.cooperativism.service.ScheduleService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ScheduleResource {
     @Autowired
     private ScheduleService scheduleService;
 
-
+    //Servico que cria a Pauta
     @RequestMapping(method = RequestMethod.POST, value="/Create")
     public ResponseEntity<?> createSchedule(@RequestParam(value="topic") String topic){
         try{
@@ -37,6 +38,7 @@ public class ScheduleResource {
 
     }
 
+    //Servico que cria a Votacao e vincula com a Pauta(Abre a votacao)
     @RequestMapping(method = RequestMethod.POST, value="/StartVoting")
     public ResponseEntity<?> startVoting(@RequestParam(value="idSchedule") int idSchedule, @RequestParam(value="timeMinutes") long minutes){
         try{
@@ -50,6 +52,8 @@ public class ScheduleResource {
         }
 
     }
+
+    //Realiza a votacao de um assocaido em especifico
     @RequestMapping(method = RequestMethod.POST, value="/Vote")
     public ResponseEntity<?> vote(@RequestParam(value="idSchedule") int idSchedule,
                                   @RequestParam(value="idAssociate") int idAssociate,
@@ -62,10 +66,8 @@ public class ScheduleResource {
         } catch (Exception e){
             return ResponseEntity.status(500).body(e.getMessage());
         }
-
-
     }
-
+    //retorna todos os dados de uma pauta
     @RequestMapping(method = RequestMethod.GET, value="/findSchedule")
     public ResponseEntity<?> findSchedule(@RequestParam(value="idSchedule") int idSchedule){
         try{
@@ -78,6 +80,7 @@ public class ScheduleResource {
         }
     }
 
+    //Retorna o resultado da votacao
     @RequestMapping(method = RequestMethod.GET, value="/getResult")
     public ResponseEntity getResult(@RequestParam(value="idSchedule") int idSchedule){
         try{
@@ -89,6 +92,23 @@ public class ScheduleResource {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
+    @RequestMapping(method = RequestMethod.POST, value="/VoteWithCPF")
+    public ResponseEntity<?> voteWithCPF(@RequestParam(value="idSchedule") int idSchedule,
+                                  @RequestParam(value="idAssociate") int idAssociate,
+                                  @RequestParam(value="choice") boolean choice,
+                                  @RequestParam(value="cpf") String cpf){
+        try{
+            scheduleService.voteWithCPF(idSchedule,idAssociate,choice,cpf);
+            return ResponseEntity.ok().body("Voto Realizado");
+        }catch (ResponseException e){
+            return ResponseEntity.status(e.getResponseStatus()).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+
 
 
 

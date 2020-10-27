@@ -31,6 +31,9 @@ public class ScheduleService {
     @Autowired
     private VoteVerifierRepository voteVerifierRepository;
 
+    @Autowired
+    private AssociateService associateService;
+
 
     public Schedule createSchedule(String topic){
         Schedule schedule = new Schedule(topic);
@@ -100,10 +103,6 @@ public class ScheduleService {
         return "Empate";
     }
 
-
-
-
-
     public void votingIsValid(Voting voting){
         if(voting == null){
             throw new VotingNotOpenException("Votação ainda não está aberta para a pauta.");
@@ -133,6 +132,13 @@ public class ScheduleService {
         if(voteVerifierRepository.VerifiyOtherVote(idAssociate,voting.getId())) {
             throw new AssociateAlreadyVoteException("Este associado já votou nesta pauta.");
         }
+    }
+
+    public void voteWithCPF(int idSchedule, int idAssociate, boolean choice, String cpf){
+        if(!associateService.verifyCPF(cpf)){
+            throw new CpfUnableException("Cpf não é valido.");
+        }
+        vote(idSchedule,idAssociate,choice);
     }
 
 
